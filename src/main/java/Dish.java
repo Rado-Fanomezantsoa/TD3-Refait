@@ -7,6 +7,15 @@ public class Dish {
     private String name;
     private DishTypeEnum dishType;
     private List<Ingredient> ingredients;
+    private List<DishIngredient> dishIngredients;
+
+    public List<DishIngredient> getDishIngrediens() {
+        return dishIngredients;
+    }
+
+    public void setDishIngrediens(List<DishIngredient> dishIngrediens) {
+        this.dishIngredients = dishIngrediens;
+    }
 
     public Double getPrice() {
         return price;
@@ -18,12 +27,16 @@ public class Dish {
 
     public Double getDishCost() {
         double totalPrice = 0;
-        for (int i = 0; i < ingredients.size(); i++) {
-            Double quantity = ingredients.get(i).getQuantity();
-            if(quantity == null) {
-                throw new RuntimeException("...");
+        List<Ingredient> ingredients = getIngredients();
+        for (Ingredient ingredient : ingredients) {
+            DishIngredient dishpx = getDishIngrediens().stream()
+                    .filter(di -> di.getId_ingredient() == ingredient.getId())
+                    .findFirst().orElse(null);
+            if (dishpx == null) {
+                throw new RuntimeException("Ingredient not found");
             }
-            totalPrice = totalPrice + ingredients.get(i).getPrice() * quantity;
+            double cost = ingredient.getPrice() * dishpx.getQuantity_required();
+            totalPrice += cost;
         }
         return totalPrice;
     }
@@ -71,9 +84,6 @@ public class Dish {
         if (ingredients == null) {
             this.ingredients = null;
             return;
-        }
-        for (int i = 0; i < ingredients.size(); i++) {
-            ingredients.get(i).setDish(this);
         }
         this.ingredients = ingredients;
     }
