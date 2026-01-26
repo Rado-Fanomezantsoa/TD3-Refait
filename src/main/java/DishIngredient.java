@@ -14,11 +14,8 @@ public class DishIngredient {
         quantity_required = quantityRequired;
         this.unit = unit;
     }
-    public DishIngredient( int idDish, int idIngredient, double quantityRequired, UnitType unit) {
-        id_dish = idDish;
-        id_ingredient = idIngredient;
-        quantity_required = quantityRequired;
-        this.unit = unit;
+
+    public DishIngredient() {
     }
 
     public int getId() {

@@ -1,3 +1,6 @@
+import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 public class Ingredient {
@@ -5,7 +8,51 @@ public class Ingredient {
     private String name;
     private CategoryEnum category;
     private Double price;
+    private List<StockMovement> stockMovementList;
 
+
+    public List<StockMovement> getStockMovementList() {
+        return stockMovementList;
+    }
+
+    public void setStockMovementList(List<StockMovement> stockMovementList) {
+        this.stockMovementList = stockMovementList;
+    }
+
+
+    public StockValue getStockValueAt(Instant instant){
+        if (stockMovementList == null || stockMovementList.isEmpty()) {
+            return new StockValue(0.0, null);
+        }
+
+        double quantity = 0.0;
+        UnitType unit = null;
+        List<StockMovement> mouvValide = stockMovementList.stream()
+                .filter(sm -> !sm.getCreationDatetime().isAfter(instant))
+                .toList();
+
+        for (StockMovement sm : mouvValide) {
+            if (unit == null) {
+                unit = sm.getValue().getUnit();
+            }
+
+            if(sm.getType() == MouvementTypeEnum.OUT){
+                quantity -= sm.getValue().getQuantity();
+            } else {
+                quantity += sm.getValue().getQuantity();
+            }
+        }
+        return new StockValue(quantity, unit);
+    }
+
+
+    public Ingredient(CategoryEnum category, Integer id, Double price, String name, List<StockMovement> stockMovementList) {
+        this.category = category;
+        this.id = id;
+        this.price = price;
+        this.name = name;
+        this.stockMovementList = stockMovementList;
+    }
 
     public Ingredient(CategoryEnum category, Integer id, String name, Double price) {
         this.category = category;
