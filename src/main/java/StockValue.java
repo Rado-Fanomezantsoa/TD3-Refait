@@ -1,39 +1,28 @@
-import java.util.Objects;
-
 public class StockValue {
-    private double quantity;
-    private UnitType unit;
+    private Double quantity;
+    private Unit unit;
 
-    public StockValue(double quantity, UnitType unit) {
-        this.quantity = quantity;
-        this.unit = unit;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        StockValue that = (StockValue) o;
-        return Double.compare(quantity, that.quantity) == 0 && unit == that.unit;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(quantity, unit);
-    }
-
-    public double getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
-    public UnitType getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(UnitType unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    @Override
+    public String toString() {
+        return "StockValue{" +
+                "quantity=" + quantity +
+                ", unit=" + unit +
+                '}';
     }
 }
