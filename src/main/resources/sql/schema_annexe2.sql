@@ -1,18 +1,3 @@
-CREATE TABLE customer_order (
-                                id SERIAL PRIMARY KEY,
-                                reference VARCHAR(20) UNIQUE NOT NULL,
-                                creation_datetime TIMESTAMP NOT NULL DEFAULT NOW()
-);
-CREATE TABLE dish_order (
-                            id SERIAL PRIMARY KEY,
-                            id_order INTEGER NOT NULL REFERENCES customer_order(id),
-                            id_dish INTEGER NOT NULL REFERENCES dish(id),
-                            quantity INTEGER NOT NULL CHECK (quantity > 0),
-                            CONSTRAINT uq_order_dish UNIQUE (id_order, id_dish)
-);
-CREATE SEQUENCE order_reference_seq START 1;
-ALTER TABLE public.dish DROP COLUMN IF EXISTS selling_price;
-
 
 alter table ingredient
     add column if not exists initial_stock numeric(10, 2);

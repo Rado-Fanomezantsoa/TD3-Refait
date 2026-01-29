@@ -1,72 +1,64 @@
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 public class Order {
-    private Integer id;
+    private int id;
     private String reference;
     private Instant creationDatetime;
-    private List<DishOrder> dishOrderList;
+    private List<DishOrder> dishOrders;
+    private TableOrder tableOrder; // Nouveau attribut obligatoire
 
-    public Integer getId() {
-        return id;
+    // Constructor (adapte à tes besoins, ex. sans id pour création)
+    public Order(String reference, Instant creationDatetime, List<DishOrder> dishOrders, TableOrder tableOrder) {
+        this.reference = reference;
+        this.creationDatetime = creationDatetime;
+        this.dishOrders = dishOrders;
+        this.tableOrder = tableOrder;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    // Getters existants (assume déjà présents)
+    public int getId() {
+        return id;
     }
 
     public String getReference() {
         return reference;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-
     public Instant getCreationDatetime() {
         return creationDatetime;
     }
 
-    public void setCreationDatetime(Instant creationDatetime) {
-        this.creationDatetime = creationDatetime;
+    public List<DishOrder> getDishOrders() {
+        return dishOrders;
     }
 
-    public List<DishOrder> getDishOrderList() {
-        return dishOrderList;
+    // Nouveau getter/setter pour tableOrder
+    public TableOrder getTableOrder() {
+        return tableOrder;
     }
 
-    public void setDishOrderList(List<DishOrder> dishOrderList) {
-        this.dishOrderList = dishOrderList;
+    public void setTableOrder(TableOrder tableOrder) {
+        this.tableOrder = tableOrder;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", reference='" + reference + '\'' +
-                ", creationDatetime=" + creationDatetime +
-                ", dishOrderList=" + dishOrderList +
-                '}';
+    /**
+     * Calcule le montant total sans VAT.
+     * Sum (dish.price * quantity) pour tous les dishOrders.
+     */
+    public Double getTotalAmountWithoutVAT() {
+        double total = 0.0;
+        for (DishOrder dishOrder : dishOrders) {
+            total += dishOrder.getDish().getPrice() * dishOrder.getQuantity();
+        }
+        return total;
     }
 
-    Double getTotalAmountWithoutVat() {
-        throw new RuntimeException("Not implemented");
-    }
-
-    Double getTotalAmountWithVat() {
-        throw new RuntimeException("Not implemented");
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Order order)) return false;
-        return Objects.equals(id, order.id) && Objects.equals(reference, order.reference) && Objects.equals(creationDatetime, order.creationDatetime) && Objects.equals(dishOrderList, order.dishOrderList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, reference, creationDatetime, dishOrderList);
+    /**
+     * Calcule le montant total avec VAT (assume 20% comme exemple ; adapte si besoin).
+     */
+    public Double getTotalAmountWithVAT() {
+        double withoutVAT = getTotalAmountWithoutVAT();
+        return withoutVAT * 1.20; // 20% VAT
     }
 }
